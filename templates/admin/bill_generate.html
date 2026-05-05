@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Generate Bill | EBMS{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h1 class="text-2xl font-bold text-slate-950">Generate bill</h1>
+    <p class="mt-2 text-sm text-slate-600">Choose an unbilled current reading. The previous reading is selected automatically.</p>
+
+    <form method="POST" class="mt-6 space-y-4">
+        <div>
+            <label class="text-sm font-medium text-slate-700">Current reading</label>
+            <select name="current_reading_id" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                {% for reading in readings %}
+                    <option value="{{ reading.id }}">
+                        #{{ reading.id }} | {{ reading.meter.meter_no }} | {{ reading.meter.customer.full_name }} | {{ reading.reading_date }} | {{ reading.reading_value }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if readings %}
+            <button class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Generate bill</button>
+        {% else %}
+            <p class="rounded-lg bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">No unbilled readings are available.</p>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Readings | EBMS{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-950">Meter readings</h1>
+        <p class="mt-1 text-sm text-slate-600">Readings are validated by date and value before insert.</p>
+    </div>
+    <a href="{{ url_for('admin_new_reading') }}" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Add reading</a>
+</div>
+
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr><th class="px-5 py-3">ID</th><th class="px-5 py-3">Meter</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Date</th><th class="px-5 py-3">Value</th><th class="px-5 py-3">Type</th></tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for reading in readings %}
+                    <tr>
+                        <td class="px-5 py-3 font-medium">#{{ reading.id }}</td>
+                        <td class="px-5 py-3"><a href="{{ url_for('admin_meter_detail', meter_id=reading.meter_id) }}" class="font-semibold text-emerald-700">{{ reading.meter.meter_no }}</a></td>
+                        <td class="px-5 py-3">{{ reading.meter.customer.full_name }}</td>
+                        <td class="px-5 py-3">{{ reading.reading_date }}</td>
+                        <td class="px-5 py-3">{{ reading.reading_value }}</td>
+                        <td class="px-5 py-3">{{ reading.reading_type }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="px-5 py-8 text-center text-slate-500">No readings yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

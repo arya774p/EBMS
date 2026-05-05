@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Address | EBMS{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h1 class="text-2xl font-bold text-slate-950">Edit address</h1>
+    <form method="POST" class="mt-5 space-y-4">
+        <div>
+            <label class="text-sm font-medium text-slate-700">Base address</label>
+            <input name="base_address" value="{{ address.base_address }}" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+        </div>
+        <div>
+            <label class="text-sm font-medium text-slate-700">Locality</label>
+            <input name="locality" value="{{ address.locality or '' }}" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3">
+            <div>
+                <label class="text-sm font-medium text-slate-700">City</label>
+                <input name="city" value="{{ address.city }}" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+            </div>
+            <div>
+                <label class="text-sm font-medium text-slate-700">State</label>
+                <input name="state" value="{{ address.state }}" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+            </div>
+            <div>
+                <label class="text-sm font-medium text-slate-700">Pincode</label>
+                <input name="pincode" value="{{ address.pincode }}" maxlength="6" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <button class="rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">Save changes</button>
+            <a href="{{ url_for('customer_addresses') }}" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

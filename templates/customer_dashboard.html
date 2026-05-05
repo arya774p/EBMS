@@ -1,7 +1,58 @@
 {% extends "base.html" %}
 
+{% block title %}Customer Dashboard | EBMS{% endblock %}
+
 {% block content %}
-<h1>Customer Dashboard</h1>
-<p>Welcome, {{ current_user.email }}</p>
-<a href="/logout">Logout</a>
+<div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+        <p class="text-sm font-semibold uppercase tracking-wide text-emerald-700">Customer dashboard</p>
+        <h1 class="mt-1 text-3xl font-bold text-slate-950">Welcome, {{ current_user.customer.full_name }}</h1>
+        <p class="mt-2 text-sm text-slate-600">Account no: {{ current_user.customer.account_no }}</p>
+    </div>
+    <a href="{{ url_for('new_meter_request') }}" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Request meter</a>
+</div>
+
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {% for label, value in [('Addresses', stats.addresses), ('Meter requests', stats.meter_requests), ('Active meters', stats.active_meters), ('Unpaid bills', stats.unpaid_bills)] %}
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-sm font-medium text-slate-500">{{ label }}</p>
+            <p class="mt-2 text-3xl font-bold text-slate-950">{{ value }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+<section class="mt-8 rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <h2 class="text-lg font-semibold text-slate-950">Recent bills</h2>
+        <a href="{{ url_for('customer_bills') }}" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800">View all</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr>
+                    <th class="px-5 py-3">Bill</th>
+                    <th class="px-5 py-3">Meter</th>
+                    <th class="px-5 py-3">Period</th>
+                    <th class="px-5 py-3">Net amount</th>
+                    <th class="px-5 py-3">Status</th>
+                    <th class="px-5 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for bill in bills %}
+                    <tr>
+                        <td class="px-5 py-3 font-medium">#{{ bill.id }}</td>
+                        <td class="px-5 py-3">{{ bill.meter.meter_no }}</td>
+                        <td class="px-5 py-3">{{ bill.billing_start }} to {{ bill.billing_end }}</td>
+                        <td class="px-5 py-3">{{ net_amounts.get(bill.id, bill.net_amount)|money }}</td>
+                        <td class="px-5 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-semibold ring-1 {{ status_class(bill.status) }}">{{ bill.status }}</span></td>
+                        <td class="px-5 py-3 text-right"><a href="{{ url_for('customer_bill_detail', bill_id=bill.id) }}" class="font-semibold text-emerald-700">Open</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="px-5 py-8 text-center text-slate-500">No bills generated yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 {% endblock %}

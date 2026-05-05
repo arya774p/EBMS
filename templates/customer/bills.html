@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Bills | EBMS{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-950">My bills</h1>
+    <p class="mt-1 text-sm text-slate-600">Net amount is read from the MySQL bill_summary view.</p>
+</div>
+
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr>
+                    <th class="px-5 py-3">Bill</th>
+                    <th class="px-5 py-3">Meter</th>
+                    <th class="px-5 py-3">Units</th>
+                    <th class="px-5 py-3">Due date</th>
+                    <th class="px-5 py-3">Net amount</th>
+                    <th class="px-5 py-3">Status</th>
+                    <th class="px-5 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for bill in bills %}
+                    <tr>
+                        <td class="px-5 py-3 font-medium">#{{ bill.id }}</td>
+                        <td class="px-5 py-3">{{ bill.meter.meter_no }}</td>
+                        <td class="px-5 py-3">{{ bill.units_consumed }}</td>
+                        <td class="px-5 py-3">{{ bill.due_date }}</td>
+                        <td class="px-5 py-3">{{ net_amounts.get(bill.id, bill.net_amount)|money }}</td>
+                        <td class="px-5 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-semibold ring-1 {{ status_class(bill.status) }}">{{ bill.status }}</span></td>
+                        <td class="px-5 py-3 text-right"><a href="{{ url_for('customer_bill_detail', bill_id=bill.id) }}" class="font-semibold text-emerald-700">Open</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="7" class="px-5 py-8 text-center text-slate-500">No bills yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
