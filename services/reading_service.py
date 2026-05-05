@@ -1,5 +1,3 @@
-from datetime import date
-
 from sqlalchemy.exc import IntegrityError
 
 from extensions import db
@@ -18,11 +16,6 @@ def add_meter_reading(meter_id, reading_date_value, reading_value, reading_type)
             raise ValueError("Meter was not found.")
         if meter.status != "ACTIVE":
             raise ValueError("Readings can be added only for active meters.")
-        if reading_date < meter.installation_date:
-            raise ValueError("Reading date cannot be before meter installation date.")
-        if reading_date > date.today():
-            raise ValueError("Reading date cannot be in the future.")
-
         previous_reading = (
             Reading.query.filter(
                 Reading.meter_id == meter.id,
